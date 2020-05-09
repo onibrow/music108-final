@@ -140,7 +140,6 @@ def get_datetime():
     return datetime.datetime.now(tz=datetime.timezone.utc).astimezone(timezone('US/Pacific')).strftime("%m-%d-%Y %H:%M:%S")
 
 def generate_wav_files(file_name, bit_res=[24,16], freq_res=[1,2,4]):
-    file_name = 'www'
     aud_file = audio_file(file_name + '.wav')
     aud_file.info_dump()
 
