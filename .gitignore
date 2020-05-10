@@ -1,5 +1,4 @@
 #/bin/bash
-*.wav
 
 *.__pycache__/
 __pycache__/

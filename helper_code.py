@@ -67,14 +67,14 @@ class audio_file(object):
             for i in range(self.num_channels):
                 self.audio_waveform_32bit[i][j] = int.from_bytes(
                     waveform_sample[i * self.byte_depth: (i + 1) * self.byte_depth], "little", signed=True) << up_sampled_bits
-        
+
     def info_dump(self):
         print("File Name:     ", self.file_name)
         print("Channels:      ", self.num_channels)
         print("Byte Depth:    ", self.byte_depth)
         print("Sampling rate: ", self.sample_freq)
         print("Frames:        ", self.num_frames)
-        
+
     def graph_waveform(self, start_sample=0, end_sample=500):
         """Plots left and right waveforms
         """
@@ -86,13 +86,13 @@ class audio_file(object):
         plt.plot(self.audio_waveform_32bit[1][start_sample:end_sample], 'b')
         plt.title("Right")
         plt.show()
-        
-    
+
+
     def save_32bit_waveform(self, file_name):
         """Saves a signal as a 32 bit PCM WAV file
         """
         save_clip_stereo(self.audio_waveform_32bit, file_name, 4, self.sample_freq, self.num_frames)
-                
+
 def down_sample(waveform, samp_rate_ratio):
     """Down samples by a ratio - resulting frequency must be an integer
     """
@@ -135,7 +135,7 @@ def compare_wavs(file1, file2):
     playsound(file1)
     time.sleep(0.5)
     playsound(file2)
-    
+
 def get_datetime():
     return datetime.datetime.now(tz=datetime.timezone.utc).astimezone(timezone('US/Pacific')).strftime("%m-%d-%Y %H:%M:%S")
 
@@ -147,7 +147,7 @@ def generate_wav_files(file_name, bit_res=[24,16], freq_res=[1,2,4]):
     list_file_names= []
     for i in bit_res:
         for j in freq_res:
-            fn = "{}_{}bit_{}kHz.wav".format(file_name, i, 44.1 / j) 
+            fn = "{}_{}bit_{}kHz.wav".format(file_name, i, 44.1 / j)
             list_file_names += [fn]
             if (not os.path.exists(fn)):
                 destroyed_waveforms[(i, j)] = res_down(down_sample(aud_file.audio_waveform_32bit, j), i)
@@ -168,11 +168,12 @@ def run_experiments(num_exp, list_file_names, file_name, debug=False):
                  "the same pair of recordings as many times as you would wish. To begin, input your name: ")
     score_file_name = "data/{}_{}_{}.csv".format(name, file_name, get_datetime())
 
-    for _ in range(num_exp):
+    for x in range(num_exp):
         seed1 = random.randint(0,num_wavs-1)
         seed2 = random.randint(0,num_wavs-1)
-        compare_wavs(list_file_names[seed1], 
+        compare_wavs(list_file_names[seed1],
                      list_file_names[seed2])
+        print("[{}/{}]".format(x, num_exp))
         i = 0
         while (i not in [1, 2, 3]):
             try:
